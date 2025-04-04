@@ -136,9 +136,9 @@ const PublicUserExit = () => {
       }
 
       // Verificar si ya tiene salida registrada
-      if (data.salida) {
+      /*if (data.salida) {
         throw new Error('Este vehículo ya tiene registrada su salida');
-      }
+      }*/
 
       setRegistroInfo(data);
 
