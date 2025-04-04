@@ -124,7 +124,7 @@ const PublicUserExit = () => {
   };
 
   // Buscar registro por código de barras
-  const buscarRegistro = async (cb) => {
+  const buscarRegistro = async (cb, horaSalidaDesdeAPI = '') => {
     try {
       setLoading(true);
 
@@ -135,17 +135,12 @@ const PublicUserExit = () => {
         throw new Error(data.message || 'Registro no encontrado');
       }
 
-      // Verificar si ya tiene salida registrada
-      /*if (data.salida) {
-        throw new Error('Este vehículo ya tiene registrada su salida');
-      }*/
-
       setRegistroInfo(data);
 
-      // Establecer valores por defecto
+      // Solo usar hora actual si no recibimos una desde el lector
       setFormData(prev => ({
         ...prev,
-        salida: horaActual,
+        salida: horaSalidaDesdeAPI || horaActual,
         status: 'Pagado'
       }));
 
@@ -156,6 +151,7 @@ const PublicUserExit = () => {
       setLoading(false);
     }
   };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -233,17 +229,19 @@ const PublicUserExit = () => {
         const res = await fetch('https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo');
         const data = await res.json();
   
-        console.log("📦 Datos del lector:", data); // 👈 Agrega este log
+        console.log("📦 Datos del lector:", data);
   
         if (res.ok && data.codigo) {
+          const horaFormateada = data.hora_salida ? data.hora_salida.substring(0, 5) : '';
+  
           setFormData(prev => ({
             ...prev,
             cb: data.codigo,
-            salida: data.hora_salida
-              ? data.hora_salida.substring(0, 5) // 👈 FORMATO CORRECTO PARA <input type="time" />
-              : ''
+            salida: horaFormateada
           }));
-          buscarRegistro(data.codigo);
+  
+          // ✅ Pasa hora al buscarRegistro para evitar que se reemplace
+          buscarRegistro(data.codigo, horaFormateada);
         }
       } catch (error) {
         console.error('Error al obtener el código del lector:', error);
@@ -251,8 +249,8 @@ const PublicUserExit = () => {
     };
   
     obtenerCodigo();
-  }, []);  
-
+  }, []);
+  
   return (
     <>
       <Menu />
