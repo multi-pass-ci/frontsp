@@ -83,8 +83,7 @@ const PublicUserExit = () => {
       detailsStartY + lineHeight
     );
     doc.text(
-      `Fecha entrada: ${
-        new Date(registroExitoso.fecha).toLocaleDateString() || "--"
+      `Fecha entrada: ${new Date(registroExitoso.fecha).toLocaleDateString() || "--"
       }`,
       20,
       detailsStartY + lineHeight * 2
@@ -108,10 +107,9 @@ const PublicUserExit = () => {
       detailsStartY + lineHeight * 5
     );
     doc.text(
-      `Monto pagado: $${
-        registroExitoso.pago
-          ? parseFloat(registroExitoso.pago).toFixed(2)
-          : "0.00"
+      `Monto pagado: $${registroExitoso.pago
+        ? parseFloat(registroExitoso.pago).toFixed(2)
+        : "0.00"
       }`,
       20,
       detailsStartY + lineHeight * 6
@@ -282,41 +280,35 @@ const PublicUserExit = () => {
   useEffect(() => {
     const obtenerCodigo = async () => {
       try {
-        const res = await fetch(
-          "https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo"
-        );
+        const res = await fetch("https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo");
         const data = await res.json();
 
         console.log("📦 Datos del lector:", data);
 
         if (res.ok && data.codigo) {
-          // Convertir hora_salida a formato HH:MM
+          // Formatear la hora de salida como HH:MM
           let salidaHora = "";
           if (data.hora_salida) {
-            const partes = data.hora_salida.split(":");
-            if (partes.length >= 2) {
-              salidaHora = `${partes[0].padStart(2, "0")}:${partes[1].padStart(
-                2,
-                "0"
-              )}`;
-            }
+            const [hora, minuto] = data.hora_salida.split(":");
+            salidaHora = `${hora.padStart(2, "0")}:${minuto.padStart(2, "0")}`;
           }
 
-          setFormData((prev) => ({
+          setFormData(prev => ({
             ...prev,
             cb: data.codigo,
-            salida: salidaHora,
+            salida: salidaHora
           }));
 
           buscarRegistro(data.codigo);
         }
       } catch (error) {
-        console.error("Error al obtener el código del lector:", error);
+        console.error("❌ Error al obtener el código del lector:", error);
       }
     };
 
     obtenerCodigo();
   }, []);
+
 
   return (
     <>
@@ -416,20 +408,12 @@ const PublicUserExit = () => {
                       </div>
                       <div className="card-body">
                         <div className="mb-3">
-                          <label className="form-label">Hora de salida:</label>
-                          <input
-                            type="time"
-                            name="salida"
-                            className="form-control"
-                            value={formData.salida}
-                            onChange={handleInputChange}
-                            required
-                          />
-                          <small className="text-muted">
-                            Hora actual: {horaActual}
-                          </small>
+                          <label className="form-label">Hora de salida detectada:</label>
+                          <div className="form-control bg-light">
+                            {formData.salida || 'No detectada'}
+                          </div>
+                          <small className="text-muted">Esta hora viene desde el lector GM65</small>
                         </div>
-
                         <div className="mb-3">
                           <label className="form-label">Monto a pagar:</label>
                           <div className="input-group">
