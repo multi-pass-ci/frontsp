@@ -269,7 +269,6 @@ const PublicUserExit = () => {
                           name="cb"
                           className="form-control"
                           value={formData.cb}
-                          disabled
                         />
                         <button
                           className="btn btn-primary"
