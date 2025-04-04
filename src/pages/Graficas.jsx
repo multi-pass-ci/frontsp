@@ -75,9 +75,12 @@ const Graficas = () => {
         title: { text: 'Cajón' }
       },
       yaxis: {
-        max: 1,
+        max: 100,
         labels: {
-          formatter: val => `${(val * 100).toFixed(0)}%`
+          formatter: val => `${val.toFixed(0)}%`
+        },
+        title: {
+          text: 'Porcentaje de uso'
         }
       },
       stroke: {
@@ -93,14 +96,15 @@ const Graficas = () => {
       },
       {
         name: 'Año anterior',
-        data: utilizacionData.map(() => 0.3) // valor ficticio
+        data: utilizacionData.map(() => 30) // valor ficticio %
       },
       {
         name: 'Objetivo',
-        data: utilizacionData.map(() => 0.5) // objetivo
+        data: utilizacionData.map(() => 50) // objetivo %
       }
     ]
   };
+  
 
   return (
     <>
