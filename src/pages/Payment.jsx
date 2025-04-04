@@ -236,7 +236,8 @@ const PublicUserExit = () => {
         if (res.ok && data.codigo) {
           setFormData(prev => ({
             ...prev,
-            cb: data.codigo
+            cb: data.codigo,
+            salida: data.hora_salida?.slice(0, 5) || '' // toma solo HH:MM
           }));
           buscarRegistro(data.codigo);
         }
@@ -247,6 +248,7 @@ const PublicUserExit = () => {
 
     obtenerCodigo();
   }, []);
+
 
 
   return (
