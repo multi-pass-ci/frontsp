@@ -226,6 +226,29 @@ const PublicUserExit = () => {
     setRegistroExitoso(null);
   };
 
+  // Obtener el código automáticamente desde la API
+  useEffect(() => {
+    const obtenerCodigo = async () => {
+      try {
+        const res = await fetch('https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo');
+        const data = await res.json();
+
+        if (res.ok && data.codigo) {
+          setFormData(prev => ({
+            ...prev,
+            cb: data.codigo
+          }));
+          buscarRegistro(data.codigo);
+        }
+      } catch (error) {
+        console.error('Error al obtener el código del lector:', error);
+      }
+    };
+
+    obtenerCodigo();
+  }, []);
+
+
   return (
     <>
       <Menu />
@@ -246,9 +269,7 @@ const PublicUserExit = () => {
                           name="cb"
                           className="form-control"
                           value={formData.cb}
-                          onChange={handleInputChange}
-                          placeholder="Ej: 002"
-                          disabled={!!registroInfo}
+                          disabled
                         />
                         <button
                           className="btn btn-primary"
