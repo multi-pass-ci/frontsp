@@ -75,17 +75,10 @@ const Graficas = () => {
         title: { text: 'Cajón' }
       },
       yaxis: {
-        max: 100,
+        max: 1,
         labels: {
-          formatter: val => `${val.toFixed(0)}%`
-        },
-        title: {
-          text: 'Porcentaje de uso'
+          formatter: val => `${(val * 100).toFixed(0)}%`
         }
-      },
-      stroke: {
-        curve: 'smooth',
-        width: 2
       },
       title: { text: 'Utilización por Cajón (%)', align: 'center' }
     },
@@ -96,15 +89,14 @@ const Graficas = () => {
       },
       {
         name: 'Año anterior',
-        data: utilizacionData.map(() => 30) // valor ficticio %
+        data: utilizacionData.map(() => 0.3) // valor ficticio
       },
       {
         name: 'Objetivo',
-        data: utilizacionData.map(() => 50) // objetivo %
+        data: utilizacionData.map(() => 0.5) // objetivo
       }
     ]
   };
-  
 
   return (
     <>
@@ -121,7 +113,7 @@ const Graficas = () => {
         </div>
 
         <div className="mb-5">
-          <ApexChart options={chartUtilizacion.options} series={chartUtilizacion.series} type="line" height={300} />
+          <ApexChart options={chartUtilizacion.options} series={chartUtilizacion.series} type="bar" height={300} />
         </div>
       </div>
     </>
