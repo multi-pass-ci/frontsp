@@ -180,7 +180,7 @@ const PublicUserEntry = () => {
     try {
       const horaCompleta = `${formData.hora}:00`;
 
-      const response = await fetch('http://localhost:4000/parking/registros/', {
+      const response = await fetch('https://smartparking-production-dee6.up.railway.app/parking/registros/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

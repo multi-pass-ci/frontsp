@@ -11,7 +11,7 @@ const GoogleSignIn = () => {
 
         try {
             // Enviar el token de Google al backend
-            const res = await axios.post("http://localhost:4000/parking/auth/google", {
+            const res = await axios.post("https://smartparking-production-dee6.up.railway.app/parking/auth/google", {
                 token: credential,
             });
 

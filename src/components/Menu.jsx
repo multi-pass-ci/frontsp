@@ -9,7 +9,7 @@ const Menu = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/parking/logout",
+        "https://smartparking-production-dee6.up.railway.app/parking/logout",
         {},
         {
           headers: {

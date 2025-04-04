@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:4000/parking/usuarios/';
+const API_URL = 'https://smartparking-production-dee6.up.railway.app/parking/';
 
 // Mapeo de tipos de usuario para conversión y registro a la base de datos
 const USER_TYPE_MAP = {

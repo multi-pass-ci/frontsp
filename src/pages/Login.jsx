@@ -22,7 +22,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/parking/usuarios/login",
+        "https://smartparking-production-dee6.up.railway.app/parking/usuarios/login",
         usuario
       );
       console.log(response.data);
@@ -47,7 +47,7 @@ const Login = () => {
 
     try {
       // Enviar el token de Google al backend
-      const res = await axios.post("http://localhost:4000/parking/auth/google", {
+      const res = await axios.post("https://smartparking-production-dee6.up.railway.app/parking/auth/google", {
         token: credential,
       });
 

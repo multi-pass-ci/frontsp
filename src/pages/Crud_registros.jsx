@@ -21,7 +21,7 @@ const CrudRegistros = () => {
     useEffect(() => {
         const fetchRegistros = async () => {
             try {
-                const response = await fetch('http://localhost:4000/parking/registros');
+                const response = await fetch('https://smartparking-production-dee6.up.railway.app/parking/registros');
                 if (!response.ok) {
                     throw new Error('Error al obtener los registros');
                 }

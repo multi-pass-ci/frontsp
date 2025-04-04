@@ -128,7 +128,7 @@ const PublicUserExit = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(`http://localhost:4000/parking/registros/${cb}`);
+      const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${cb}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -177,7 +177,7 @@ const PublicUserExit = () => {
       // Convertir HH:MM a HH:MM:00 para el backend
       const salidaCompleta = `${formData.salida}:00`;
 
-      const response = await fetch(`http://localhost:4000/parking/registros/${formData.cb}`, {
+      const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${formData.cb}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
