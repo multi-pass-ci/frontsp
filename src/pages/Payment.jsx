@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Menu from "../components/Menu";
-import { toast } from 'react-toastify';
-import jsPDF from 'jspdf';
+import { toast } from "react-toastify";
+import jsPDF from "jspdf";
 
 const PublicUserExit = () => {
   const [formData, setFormData] = useState({
-    cb: '', // Código de barras
-    salida: '', // Hora de salida (HH:MM)
-    pago: '', // Monto del pago
-    status: 'Pagado' // Estado del pago
+    cb: "", // Código de barras
+    salida: "", // Hora de salida (HH:MM)
+    pago: "", // Monto del pago
+    status: "Pagado", // Estado del pago
   });
 
   const [registroInfo, setRegistroInfo] = useState(null);
   const [registroExitoso, setRegistroExitoso] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [horaActual, setHoraActual] = useState('');
+  const [horaActual, setHoraActual] = useState("");
 
   // Actualizar hora actual cada minuto
   useEffect(() => {
     const updateHoraActual = () => {
       const now = new Date();
-      const horas = String(now.getHours()).padStart(2, '0');
-      const minutos = String(now.getMinutes()).padStart(2, '0');
+      const horas = String(now.getHours()).padStart(2, "0");
+      const minutos = String(now.getMinutes()).padStart(2, "0");
       setHoraActual(`${horas}:${minutos}`);
     };
 
@@ -41,18 +41,18 @@ const PublicUserExit = () => {
     const pageHeight = doc.internal.pageSize.getHeight();
 
     // --- Configuración del documento ---
-    doc.setFont('helvetica');
+    doc.setFont("helvetica");
     doc.setTextColor(40);
 
     // --- Logo en esquina superior derecha ---
-    const logo = '/public/estacion.jpeg'; // Ruta a tu logo
+    const logo = "/public/estacion.jpeg"; // Ruta a tu logo
     const logoWidth = 20; // Ancho del logo en mm
     const logoHeight = 15; // Alto del logo en mm (mantiene proporción)
     const logoMargin = 10; // Margen desde los bordes
 
     doc.addImage(
       logo,
-      'JPEG',
+      "JPEG",
       pageWidth - logoWidth - logoMargin, // Posición X (esquina derecha con margen)
       logoMargin, // Posición Y (margen superior)
       logoWidth,
@@ -61,7 +61,7 @@ const PublicUserExit = () => {
 
     // --- Título centrado ---
     doc.setFontSize(16);
-    doc.text('COMPROBANTE DE SALIDA', pageWidth / 2, 25, { align: 'center' });
+    doc.text("COMPROBANTE DE SALIDA", pageWidth / 2, 25, { align: "center" });
 
     // --- Línea divisoria ---
     doc.setDrawColor(200);
@@ -72,14 +72,55 @@ const PublicUserExit = () => {
     const detailsStartY = 40;
     const lineHeight = 10;
 
-    doc.text(`Matrícula: ${registroExitoso.matricula || '--'}`, 20, detailsStartY);
-    doc.text(`Cajón: ${registroExitoso.cajon_numero || '--'}`, 20, detailsStartY + lineHeight);
-    doc.text(`Fecha entrada: ${new Date(registroExitoso.fecha).toLocaleDateString() || '--'}`, 20, detailsStartY + lineHeight * 2);
-    doc.text(`Hora entrada: ${registroExitoso.entrada || '--'}`, 20, detailsStartY + lineHeight * 3);
-    doc.text(`Hora salida: ${registroExitoso.salida || '--'}`, 20, detailsStartY + lineHeight * 4);
-    doc.text(`Tiempo estancia: ${calculateTimeDifference(registroExitoso.entrada, registroExitoso.salida)}`, 20, detailsStartY + lineHeight * 5);
-    doc.text(`Monto pagado: $${registroExitoso.pago ? parseFloat(registroExitoso.pago).toFixed(2) : '0.00'}`, 20, detailsStartY + lineHeight * 6);
-    doc.text(`Estado: ${registroExitoso.status}`, 20, detailsStartY + lineHeight * 7);
+    doc.text(
+      `Matrícula: ${registroExitoso.matricula || "--"}`,
+      20,
+      detailsStartY
+    );
+    doc.text(
+      `Cajón: ${registroExitoso.cajon_numero || "--"}`,
+      20,
+      detailsStartY + lineHeight
+    );
+    doc.text(
+      `Fecha entrada: ${
+        new Date(registroExitoso.fecha).toLocaleDateString() || "--"
+      }`,
+      20,
+      detailsStartY + lineHeight * 2
+    );
+    doc.text(
+      `Hora entrada: ${registroExitoso.entrada || "--"}`,
+      20,
+      detailsStartY + lineHeight * 3
+    );
+    doc.text(
+      `Hora salida: ${registroExitoso.salida || "--"}`,
+      20,
+      detailsStartY + lineHeight * 4
+    );
+    doc.text(
+      `Tiempo estancia: ${calculateTimeDifference(
+        registroExitoso.entrada,
+        registroExitoso.salida
+      )}`,
+      20,
+      detailsStartY + lineHeight * 5
+    );
+    doc.text(
+      `Monto pagado: $${
+        registroExitoso.pago
+          ? parseFloat(registroExitoso.pago).toFixed(2)
+          : "0.00"
+      }`,
+      20,
+      detailsStartY + lineHeight * 6
+    );
+    doc.text(
+      `Estado: ${registroExitoso.status}`,
+      20,
+      detailsStartY + lineHeight * 7
+    );
 
     // --- Texto del código de barras ---
     // doc.setFontSize(10);
@@ -95,19 +136,25 @@ const PublicUserExit = () => {
     doc.setTextColor(100);
     const footerY = detailsStartY + lineHeight * 8 + 12;
 
-    doc.text('Gracias por su visita', pageWidth / 2, footerY, { align: 'center' });
-    doc.text('¡Vuelva pronto!', pageWidth / 2, footerY + 5, { align: 'center' });
+    doc.text("Gracias por su visita", pageWidth / 2, footerY, {
+      align: "center",
+    });
+    doc.text("¡Vuelva pronto!", pageWidth / 2, footerY + 5, {
+      align: "center",
+    });
 
     // --- Guardar el PDF ---
-    doc.save(`comprobante_salida_${registroExitoso.cb || 'estacionamiento'}.pdf`);
+    doc.save(
+      `comprobante_salida_${registroExitoso.cb || "estacionamiento"}.pdf`
+    );
   };
 
   const calculateTimeDifference = (entrada, salida) => {
-    if (!entrada || !salida) return '--';
+    if (!entrada || !salida) return "--";
 
     try {
-      const [entradaH, entradaM] = entrada.split(':').map(Number);
-      const [salidaH, salidaM] = salida.split(':').map(Number);
+      const [entradaH, entradaM] = entrada.split(":").map(Number);
+      const [salidaH, salidaM] = salida.split(":").map(Number);
 
       let horas = salidaH - entradaH;
       let minutos = salidaM - entradaM;
@@ -119,7 +166,7 @@ const PublicUserExit = () => {
 
       return `${horas}h ${minutos}m`;
     } catch {
-      return '--';
+      return "--";
     }
   };
 
@@ -128,11 +175,13 @@ const PublicUserExit = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${cb}`);
+      const response = await fetch(
+        `https://smartparking-production-dee6.up.railway.app/parking/registros/${cb}`
+      );
       const data = await response.json();
       console.log(data);
       if (!response.ok) {
-        throw new Error(data.message || 'Registro no encontrado');
+        throw new Error(data.message || "Registro no encontrado");
       }
 
       // Verificar si ya tiene salida registrada
@@ -143,12 +192,11 @@ const PublicUserExit = () => {
       setRegistroInfo(data);
 
       // Establecer valores por defecto
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         salida: horaActual,
-        status: 'Pagado'
+        status: "Pagado",
       }));
-
     } catch (error) {
       toast.error(error.message);
       setRegistroInfo(null);
@@ -161,7 +209,7 @@ const PublicUserExit = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'pago' ? (value === '' ? '' : parseFloat(value)) : value
+      [name]: name === "pago" ? (value === "" ? "" : parseFloat(value)) : value,
     });
   };
 
@@ -169,7 +217,7 @@ const PublicUserExit = () => {
     e.preventDefault();
 
     if (!registroInfo) {
-      toast.error('Debe buscar primero un registro');
+      toast.error("Debe buscar primero un registro");
       return;
     }
 
@@ -177,45 +225,49 @@ const PublicUserExit = () => {
       // Convertir HH:MM a HH:MM:00 para el backend
       const salidaCompleta = `${formData.salida}:00`;
 
-      const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${formData.cb}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
-        },
-        body: JSON.stringify({
-          salida: salidaCompleta,
-          pago: formData.pago === '' ? 0 : formData.pago,
-          status: formData.status,
-          cajon_id: registroInfo.cajon_id
-        }),
-      });
+      const response = await fetch(
+        `https://smartparking-production-dee6.up.railway.app/parking/registros/${formData.cb}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          },
+          body: JSON.stringify({
+            salida: salidaCompleta,
+            pago: formData.pago === "" ? 0 : formData.pago,
+            status: formData.status,
+            cajon_id: registroInfo.cajon_id,
+          }),
+        }
+      );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Error al registrar salida');
+        throw new Error(data.message || "Error al registrar salida");
       }
 
-      toast.success(`Salida registrada para matricula ${registroInfo.matricula}`);
+      toast.success(
+        `Salida registrada para matricula ${registroInfo.matricula}`
+      );
 
       // Guardar datos para mostrar en la pantalla de éxito
       setRegistroExitoso({
         ...registroInfo,
         salida: formData.salida,
         pago: formData.pago,
-        status: formData.status
+        status: formData.status,
       });
 
       // Resetear el formulario
       setFormData({
-        cb: '',
-        salida: '',
-        pago: '',
-        status: 'Pagado'
+        cb: "",
+        salida: "",
+        pago: "",
+        status: "Pagado",
       });
       setRegistroInfo(null);
-
     } catch (error) {
       toast.error(error.message);
       console.error(error);
@@ -230,23 +282,36 @@ const PublicUserExit = () => {
   useEffect(() => {
     const obtenerCodigo = async () => {
       try {
-        const res = await fetch('https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo');
+        const res = await fetch(
+          "https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo"
+        );
         const data = await res.json();
 
-        console.log("📦 Datos del lector:", data); // 👈 Agrega este log
+        console.log("📦 Datos del lector:", data);
 
         if (res.ok && data.codigo) {
-          setFormData(prev => ({
+          // Convertir hora_salida a formato HH:MM
+          let salidaHora = "";
+          if (data.hora_salida) {
+            const partes = data.hora_salida.split(":");
+            if (partes.length >= 2) {
+              salidaHora = `${partes[0].padStart(2, "0")}:${partes[1].padStart(
+                2,
+                "0"
+              )}`;
+            }
+          }
+
+          setFormData((prev) => ({
             ...prev,
             cb: data.codigo,
-            salida: data.hora_salida
-              ? data.hora_salida.split(':').slice(0, 2).join(':') // HH:MM
-              : ''
+            salida: salidaHora,
           }));
+
           buscarRegistro(data.codigo);
         }
       } catch (error) {
-        console.error('Error al obtener el código del lector:', error);
+        console.error("Error al obtener el código del lector:", error);
       }
     };
 
@@ -258,7 +323,9 @@ const PublicUserExit = () => {
       <Menu />
       <div className="content-container">
         <div className="container">
-          <h2 className="font-bold text-center mb-4">Registro de salida - Usuario público</h2>
+          <h2 className="font-bold text-center mb-4">
+            Registro de salida - Usuario público
+          </h2>
 
           {!registroExitoso ? (
             <div className="row justify-content-center">
@@ -266,7 +333,9 @@ const PublicUserExit = () => {
                 <div className="card mb-4">
                   <div className="card-body">
                     <div className="mb-3">
-                      <label className="form-label">Buscar vehículo por código de barras:</label>
+                      <label className="form-label">
+                        Buscar vehículo por código de barras:
+                      </label>
                       <div className="input-group">
                         <input
                           type="text"
@@ -281,7 +350,7 @@ const PublicUserExit = () => {
                           onClick={() => buscarRegistro(formData.cb)}
                           disabled={!formData.cb || loading || !!registroInfo}
                         >
-                          {loading ? 'Buscando...' : 'Buscar'}
+                          {loading ? "Buscando..." : "Buscar"}
                         </button>
                         {registroInfo && (
                           <button
@@ -289,10 +358,10 @@ const PublicUserExit = () => {
                             type="button"
                             onClick={() => {
                               setFormData({
-                                cb: '',
-                                salida: '',
-                                pago: '',
-                                status: 'Pagado'
+                                cb: "",
+                                salida: "",
+                                pago: "",
+                                status: "Pagado",
                               });
                               setRegistroInfo(null);
                             }}
@@ -330,10 +399,12 @@ const PublicUserExit = () => {
                         </div>
                         <div className="row mb-2">
                           <div className="col-md-6">
-                            <strong>Fecha:</strong> {new Date(registroInfo.fecha).toLocaleDateString()}
+                            <strong>Fecha:</strong>{" "}
+                            {new Date(registroInfo.fecha).toLocaleDateString()}
                           </div>
                           <div className="col-md-6">
-                            <strong>Hora de entrada:</strong> {registroInfo.entrada}
+                            <strong>Hora de entrada:</strong>{" "}
+                            {registroInfo.entrada}
                           </div>
                         </div>
                       </div>
@@ -354,7 +425,9 @@ const PublicUserExit = () => {
                             onChange={handleInputChange}
                             required
                           />
-                          <small className="text-muted">Hora actual: {horaActual}</small>
+                          <small className="text-muted">
+                            Hora actual: {horaActual}
+                          </small>
                         </div>
 
                         <div className="mb-3">
@@ -397,7 +470,7 @@ const PublicUserExit = () => {
                         className="btn btn-success"
                         disabled={loading}
                       >
-                        {loading ? 'Procesando...' : 'Registrar salida'}
+                        {loading ? "Procesando..." : "Registrar salida"}
                       </button>
                     </div>
                   </form>
@@ -407,19 +480,50 @@ const PublicUserExit = () => {
           ) : (
             <div className="row justify-content-center">
               <div className="col-md-8 col-lg-6 text-center">
-                <h4 className="text-success mb-4">¡Salida registrada exitosamente!</h4>
+                <h4 className="text-success mb-4">
+                  ¡Salida registrada exitosamente!
+                </h4>
 
                 <div className="card mb-4">
                   <div className="card-body">
                     <h5 className="card-title">Detalles de la salida</h5>
-                    <p><strong>Matrícula:</strong> {registroExitoso.matricula || '--'}</p>
-                    <p><strong>Cajón:</strong> {registroExitoso.cajon_numero || '--'}</p>
-                    <p><strong>Fecha entrada:</strong> {new Date(registroExitoso.fecha).toLocaleDateString() || '--'}</p>
-                    <p><strong>Hora entrada:</strong> {registroExitoso.entrada || '--'}</p>
-                    <p><strong>Hora salida:</strong> {registroExitoso.salida || '--'}</p>
-                    <p><strong>Tiempo estancia:</strong> {calculateTimeDifference(registroExitoso.entrada, registroExitoso.salida)}</p>
-                    <p><strong>Monto pagado:</strong> ${registroExitoso.pago ? parseFloat(registroExitoso.pago).toFixed(2) : '0.00'}</p>
-                    <p><strong>Estado:</strong> {registroExitoso.status}</p>
+                    <p>
+                      <strong>Matrícula:</strong>{" "}
+                      {registroExitoso.matricula || "--"}
+                    </p>
+                    <p>
+                      <strong>Cajón:</strong>{" "}
+                      {registroExitoso.cajon_numero || "--"}
+                    </p>
+                    <p>
+                      <strong>Fecha entrada:</strong>{" "}
+                      {new Date(registroExitoso.fecha).toLocaleDateString() ||
+                        "--"}
+                    </p>
+                    <p>
+                      <strong>Hora entrada:</strong>{" "}
+                      {registroExitoso.entrada || "--"}
+                    </p>
+                    <p>
+                      <strong>Hora salida:</strong>{" "}
+                      {registroExitoso.salida || "--"}
+                    </p>
+                    <p>
+                      <strong>Tiempo estancia:</strong>{" "}
+                      {calculateTimeDifference(
+                        registroExitoso.entrada,
+                        registroExitoso.salida
+                      )}
+                    </p>
+                    <p>
+                      <strong>Monto pagado:</strong> $
+                      {registroExitoso.pago
+                        ? parseFloat(registroExitoso.pago).toFixed(2)
+                        : "0.00"}
+                    </p>
+                    <p>
+                      <strong>Estado:</strong> {registroExitoso.status}
+                    </p>
                   </div>
                 </div>
 
