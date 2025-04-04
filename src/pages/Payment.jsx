@@ -350,8 +350,7 @@ const PublicUserExit = () => {
                             className="form-control"
                             value={formData.salida}
                             onChange={handleInputChange}
-                            required
-                            readOnly 
+                            required 
                           />
                           <small className="text-muted">Hora actual: {horaActual}</small>
                         </div>
