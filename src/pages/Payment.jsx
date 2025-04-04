@@ -130,7 +130,7 @@ const PublicUserExit = () => {
 
       const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${cb}`);
       const data = await response.json();
-
+      console.log(data);
       if (!response.ok) {
         throw new Error(data.message || 'Registro no encontrado');
       }
