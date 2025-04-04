@@ -30,7 +30,7 @@ const Login = () => {
       // Guardar el token en localStorage para manejarlo correctamente
       localStorage.setItem("token", response.data.token);
 
-      if ((response.data.tipo === 3 || response.data.tipo === 2) && response.data.estado === "Activo") {        toast.success("Inicio de sesión exitoso");
+      if ((response.data.tipo === 3 || response.data.tipo === 2) && response.data.estado === "activo") {        toast.success("Inicio de sesión exitoso");
         navigate("/home");
       } else {
         toast.error("Usuario no autorizado para acceder a esta página");
