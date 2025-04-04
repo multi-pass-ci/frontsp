@@ -231,18 +231,17 @@ const PublicUserExit = () => {
   
         console.log("📦 Datos del lector:", data);
   
-        if (res.ok && data.cb) {
-          const horaFormateada = data.salida ? data.salida.substring(0, 5) : '';
-          const pagoCalculado = data.pago || '';
+        if (res.ok && data.codigo) {
+          const horaFormateada = data.hora_salida ? data.hora_salida.substring(0, 5) : '';
   
           setFormData(prev => ({
             ...prev,
-            cb: data.cb, // ✅ se muestra automáticamente en el input
-            salida: horaFormateada,
-            pago: pagoCalculado
+            cb: data.codigo,
+            salida: horaFormateada
           }));
   
-          buscarRegistro(data.cb, horaFormateada);
+          // ✅ Pasa hora al buscarRegistro para evitar que se reemplace
+          buscarRegistro(data.codigo, horaFormateada);
         }
       } catch (error) {
         console.error('Error al obtener el código del lector:', error);
@@ -251,7 +250,6 @@ const PublicUserExit = () => {
   
     obtenerCodigo();
   }, []);
-  
   
   return (
     <>
