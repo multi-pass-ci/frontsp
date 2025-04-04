@@ -228,29 +228,31 @@ const PublicUserExit = () => {
       try {
         const res = await fetch('https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo');
         const data = await res.json();
-  
+
         console.log("📦 Datos del lector:", data);
-  
-        if (res.ok && data.codigo) {
-          const horaFormateada = data.hora_salida ? data.hora_salida.substring(0, 5) : '';
-  
+
+        if (res.ok && data.cb) {
+          const horaFormateada = data.salida ? data.salida.substring(0, 5) : '';
+          const pagoCalculado = data.pago || '';
+
           setFormData(prev => ({
             ...prev,
-            cb: data.codigo,
-            salida: horaFormateada
+            cb: data.cb,                   // ✅ Código en el input
+            salida: horaFormateada,       // ✅ Hora de salida en formato HH:MM
+            pago: pagoCalculado           // ✅ Monto desde el trigger
           }));
-  
-          // ✅ Pasa hora al buscarRegistro para evitar que se reemplace
-          buscarRegistro(data.codigo, horaFormateada);
+
+          buscarRegistro(data.cb, horaFormateada);
         }
       } catch (error) {
         console.error('Error al obtener el código del lector:', error);
       }
     };
-  
+
     obtenerCodigo();
   }, []);
-  
+
+
   return (
     <>
       <Menu />
