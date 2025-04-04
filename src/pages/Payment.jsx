@@ -178,7 +178,7 @@ const PublicUserExit = () => {
       const salidaCompleta = `${formData.salida}:00`;
 
       const response = await fetch(`https://smartparking-production-dee6.up.railway.app/parking/registros/${formData.cb}`, {
-        method: 'PUT',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
