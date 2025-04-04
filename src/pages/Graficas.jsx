@@ -80,6 +80,10 @@ const Graficas = () => {
           formatter: val => `${(val * 100).toFixed(0)}%`
         }
       },
+      stroke: {
+        curve: 'smooth',
+        width: 2
+      },
       title: { text: 'Utilización por Cajón (%)', align: 'center' }
     },
     series: [
@@ -113,7 +117,7 @@ const Graficas = () => {
         </div>
 
         <div className="mb-5">
-          <ApexChart options={chartUtilizacion.options} series={chartUtilizacion.series} type="bar" height={300} />
+          <ApexChart options={chartUtilizacion.options} series={chartUtilizacion.series} type="line" height={300} />
         </div>
       </div>
     </>
