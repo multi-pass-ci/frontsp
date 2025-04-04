@@ -232,13 +232,15 @@ const PublicUserExit = () => {
       try {
         const res = await fetch('https://smartparking-production-dee6.up.railway.app/api/iot/lector/codigo');
         const data = await res.json();
-  
+
+        console.log("📦 Datos del lector:", data); // 👈 Agrega este log
+
         if (res.ok && data.codigo) {
           setFormData(prev => ({
             ...prev,
             cb: data.codigo,
             salida: data.hora_salida
-              ? data.hora_salida.split(':').slice(0, 2).join(':') // convierte HH:MM:SS → HH:MM
+              ? data.hora_salida.split(':').slice(0, 2).join(':') // HH:MM
               : ''
           }));
           buscarRegistro(data.codigo);
@@ -247,11 +249,9 @@ const PublicUserExit = () => {
         console.error('Error al obtener el código del lector:', error);
       }
     };
-  
+
     obtenerCodigo();
   }, []);
-  
-
 
   return (
     <>
@@ -273,7 +273,7 @@ const PublicUserExit = () => {
                           name="cb"
                           className="form-control"
                           value={formData.cb}
-                          readOnly 
+                          readOnly
                         />
                         <button
                           className="btn btn-primary"
@@ -352,7 +352,7 @@ const PublicUserExit = () => {
                             className="form-control"
                             value={formData.salida}
                             onChange={handleInputChange}
-                            required 
+                            required
                           />
                           <small className="text-muted">Hora actual: {horaActual}</small>
                         </div>
